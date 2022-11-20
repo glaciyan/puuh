@@ -1,22 +1,46 @@
 import { CheerioAPI } from "cheerio";
 import { Ora } from "ora";
-import { CharacterItemGroups } from "../contracts/CharacterItemGroups";
-import { CharacterItems } from "../contracts/CharacterItems";
-import { ICharacter } from "../contracts/ICharacter";
 import { getText } from "../getText";
-import { CharacterItemSelectors, CharacterSelectors } from "../selectors";
+import { CharacterItemSelectors, CharacterSelectors } from "./selectors";
 import { normalizedName } from "../toId";
 import { parseElement } from "../parseElement";
 import { parseWeapon } from "../parseWeapon";
+import { CharacterItemGroups } from "../contracts/CharacterItemGroups";
+import { CharacterItems } from "../contracts/CharacterItems";
+import { ICharacter } from "../contracts/ICharacter";
+import { Items } from "../../lib/data/Items";
+import { IItem } from "../../lib/data/contracts/IItem";
+import { green } from "kolorist";
 
-export const handleCharacter = ($: CheerioAPI, spinner: Ora): void => {
+export const handleCharacter = async ($: CheerioAPI, spinner: Ora): Promise<void> => {
     spinner.text = "Processing Character";
 
     const character = fetchCharacter($);
 
     spinner.stop();
 
-    console.log(character);
+    const formatted = getFormatted(character);
+    console.log(formatted);
+    console.warn(green("Done"));
+};
+
+const getFormatted = (c: ICharacter) => {
+    return `${c.normalizedName}: {
+    name: "${c.name}",
+    normalizedName: "${c.normalizedName}",
+    element: Elements.${c.element.normalizedName},
+    weaponType: WeaponTypes.${c.weaponType.normalizedName},
+    rarity: ${c.rarity},
+    sub: "${c.sub}",
+    constellation: "${c.constellation}",
+    description: "${c.description}",
+    local: Items.${c.local},
+    commonGroup: ItemGroups.${c.commonGroup},
+    boss: Items.${c.boss},
+    gemGroup: ItemGroups.${c.element.normalizedName}_gem,
+    bookGroup: ItemGroups.${c.bookGroup},
+    weekly: Items.${c.weekly}
+},`;
 };
 
 const fetchCharacter = ($: CheerioAPI): ICharacter => {
@@ -37,19 +61,28 @@ const fetchCharacter = ($: CheerioAPI): ICharacter => {
 };
 
 const fetchCharacterItemGroups = ($: CheerioAPI): CharacterItemGroups => {
-    return {};
+    return {
+        commonGroup: fetchItemGroup($, CharacterItemSelectors.FirstCommon),
+        bookGroup: fetchItemGroup($, CharacterItemSelectors.FirstBook),
+    };
+};
+
+const fetchItemGroup = ($: CheerioAPI, selector: string) => {
+    const firstName = normalizedName($(selector).attr("alt")?.trim()!);
+    //@ts-ignore
+    return ((Items[firstName] as IItem).groupId as string) ?? "unknown";
 };
 
 const fetchCharacterItems = ($: CheerioAPI): CharacterItems => {
     return {
-        boss: normalizedName(fetchItem($, CharacterItemSelectors.Boss)!),
-        local: normalizedName(fetchItem($, CharacterItemSelectors.Local)!),
-        weekly: normalizedName(fetchItem($, CharacterItemSelectors.Weekly)!),
+        boss: fetchItem($, CharacterItemSelectors.Boss),
+        local: fetchItem($, CharacterItemSelectors.Local),
+        weekly: fetchItem($, CharacterItemSelectors.Weekly),
     };
 };
 
 const fetchItem = ($: CheerioAPI, selector: string) => {
-    return $(selector).attr("alt")?.trim() ?? null;
+    return normalizedName($(selector).attr("alt")?.trim()!);
 };
 
 const countRarityStars = ($: CheerioAPI): 4 | 5 => {

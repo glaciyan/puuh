@@ -1,0 +1,16 @@
+eula: {
+    name: "Eula",
+    normalizedName: "eula",
+    element: Elements.cryo,
+    weaponType: WeaponTypes.claymore,
+    rarity: 5,
+    sub: "Bonus CritDMG%",
+    constellation: "Aphros Delos",
+    description: "The Spindrift Knight, a scion of the old aristocracy, and the Captain of the Knights of Favonius Reconnaissance Company. The reason for which a descendant of the ancient nobles might join the Knights remains a great mystery in Mondstadt to this very day.",
+    local: Items.dandelion_seed,
+    commonGroup: ItemGroups.mask,
+    boss: Items.crystalline_bloom,
+    gemGroup: ItemGroups.cryo_gem,
+    bookGroup: ItemGroups.resistance,
+    weekly: Items.dragon_lords_crown
+},

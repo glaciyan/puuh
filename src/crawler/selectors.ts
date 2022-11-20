@@ -16,4 +16,8 @@ export const CharacterItemSelectors = {
     Boss: "body > div > div.wp-block-columns > div:nth-child(2) > div.entry-content.wp-block-post-content > table.genshin_table.main_table > tbody > tr:nth-child(17) > td:nth-child(2) > a:nth-child(5) > div > img",
     Local: "body > div > div.wp-block-columns > div:nth-child(2) > div.entry-content.wp-block-post-content > table.genshin_table.main_table > tbody > tr:nth-child(17) > td:nth-child(2) > a:nth-child(6) > div > img",
     Weekly: "body > div > div.wp-block-columns > div:nth-child(2) > div.entry-content.wp-block-post-content > table.genshin_table.main_table > tbody > tr:nth-child(18) > td:nth-child(2) > a:nth-child(4) > div > img",
+    FirstCommon:
+        "body > div > div.wp-block-columns > div:nth-child(2) > div.entry-content.wp-block-post-content > table.genshin_table.main_table > tbody > tr:nth-child(17) > td:nth-child(2) > a:nth-child(7) > div > img",
+    FirstBook:
+        "body > div > div.wp-block-columns > div:nth-child(2) > div.entry-content.wp-block-post-content > table.genshin_table.main_table > tbody > tr:nth-child(18) > td:nth-child(2) > a:nth-child(1) > div > img",
 };

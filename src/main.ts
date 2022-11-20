@@ -24,7 +24,7 @@ async function main() {
     try {
         if (option === "character" || option === "c") {
             const $ = await prepareSite(url);
-            handleCharacter($, spinner);
+            await handleCharacter($, spinner);
         } else {
             spinner.stop();
             console.error(red("Error: Invalid option"), option);

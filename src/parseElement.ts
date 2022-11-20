@@ -1,5 +1,5 @@
-import { IElement } from "./contracts/IElement";
-import { Elements } from "./Elements";
+import { IElement } from "../lib/data/contracts/IElement";
+import { Elements } from "../lib/data/Elements";
 
 export const parseElement = (str: string): IElement => {
     switch (str.toLowerCase()) {

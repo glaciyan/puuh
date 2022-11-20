@@ -1,10 +1,9 @@
-import { IBaseCharacter } from "./IBaseCharacter";
+import { IBaseCharacter } from "../../lib/data/contracts/IBaseCharacter";
 
 export interface ICharacter extends IBaseCharacter {
   local: string;
-  commonGroup: string;
   boss: string;
-  gemGroup: string;
-  bookGroup: string;
   weekly: string;
+  commonGroup: string;
+  bookGroup: string;
 }

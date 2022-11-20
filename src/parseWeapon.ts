@@ -1,5 +1,5 @@
-import { IWeaponType } from "./contracts/IWeaponType";
-import { WeaponTypes } from "./WeaponTypes";
+import { IWeaponType } from "../lib/data/contracts/IWeaponType";
+import { WeaponTypes } from "../lib/data/WeaponTypes";
 
 export const parseWeapon = (str: string): IWeaponType => {
     switch (str.toLowerCase()) {
