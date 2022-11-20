@@ -1,5 +1,5 @@
 import { CheerioAPI } from "cheerio";
-import { Ora } from "ora";
+import ora, { Ora } from "ora";
 import { getText } from "../getText";
 import { CharacterItemSelectors, CharacterSelectors } from "./selectors";
 import { normalizedName } from "../toId";
@@ -11,6 +11,8 @@ import { ICharacter } from "../contracts/ICharacter";
 import { Items } from "../../lib/data/Items";
 import { IItem } from "../../lib/data/contracts/IItem";
 import { green } from "kolorist";
+import fs from "fs";
+import https from "https";
 
 export const handleCharacter = async (
     $: CheerioAPI,
@@ -26,10 +28,24 @@ export const handleCharacter = async (
     console.log(formatted);
     console.warn(green("Done"));
 
-    const gacha = $("#char_gallery a:contains('Gacha Splash')").attr("href");
-    const icon = $("#char_gallery a:contains('Icon')").attr("href");
-    console.warn(`Card: https://genshin.honeyhunterworld.com${gacha}`);
-    console.warn(`Mugshot: https://genshin.honeyhunterworld.com${icon}`);
+    const gacha =
+        "https://genshin.honeyhunterworld.com" +
+        $("#char_gallery a:contains('Gacha Splash')").attr("href");
+    const icon =
+        "https://genshin.honeyhunterworld.com" +
+        $("#char_gallery a:contains('Icon')").attr("href");
+    // console.warn(`Card: ${gacha}`);
+    // console.warn(`Mugshot: ${icon}`);
+
+    const downloadSpinner = ora("Downloading images...").start();
+    https.get(gacha, (res) => {
+        res.pipe(fs.createWriteStream("./card.webp"));
+    });
+
+    https.get(icon, (res) => {
+        res.pipe(fs.createWriteStream("./mugshot.webp"));
+        downloadSpinner.stop();
+    });
 };
 
 const getFormatted = (c: ICharacter) => {
