@@ -1,0 +1,1 @@
+node.exe puuh.js c $1 | clipboard.exe --copy
