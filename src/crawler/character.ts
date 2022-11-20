@@ -12,7 +12,10 @@ import { Items } from "../../lib/data/Items";
 import { IItem } from "../../lib/data/contracts/IItem";
 import { green } from "kolorist";
 
-export const handleCharacter = async ($: CheerioAPI, spinner: Ora): Promise<void> => {
+export const handleCharacter = async (
+    $: CheerioAPI,
+    spinner: Ora
+): Promise<void> => {
     spinner.text = "Processing Character";
 
     const character = fetchCharacter($);
@@ -22,6 +25,11 @@ export const handleCharacter = async ($: CheerioAPI, spinner: Ora): Promise<void
     const formatted = getFormatted(character);
     console.log(formatted);
     console.warn(green("Done"));
+
+    const gacha = $("#char_gallery a:contains('Gacha Splash')").attr("href");
+    const icon = $("#char_gallery a:contains('Icon')").attr("href");
+    console.warn(`Card: https://genshin.honeyhunterworld.com${gacha}`);
+    console.warn(`Mugshot: https://genshin.honeyhunterworld.com${icon}`);
 };
 
 const getFormatted = (c: ICharacter) => {
