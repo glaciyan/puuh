@@ -1,0 +1,4 @@
+product-check.js
+node_modules
+.env
+dist
