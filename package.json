@@ -6,20 +6,19 @@
         "test": "vitest"
     },
     "devDependencies": {
-        "axios": "^1.1.3",
-        "cheerio": "1.0.0-rc.12",
-        "clipboardy": "^3.0.0",
-        "esbuild": "^0.15.11",
-        "kolorist": "^1.6.0",
-        "minimist": "^1.2.7",
-        "ora": "5.4.1",
-        "prettier": "^2.7.1",
-        "zod": "^3.19.1",
         "@tsconfig/node18": "^1.0.1",
         "@types/minimist": "^1.2.2",
         "@types/node": "^18.11.0",
+        "axios": "^1.1.3",
+        "cheerio": "1.0.0-rc.12",
+        "clipboardy": "^3.0.0",
         "dotenv": "^16.0.3",
+        "esbuild": "^0.15.11",
+        "kolorist": "^1.6.0",
+        "minimist": "^1.2.7",
+        "prettier": "^2.7.1",
         "typescript": "^4.8.4",
-        "vitest": "^0.24.3"
+        "vitest": "^0.24.3",
+        "zod": "^3.19.1"
     }
 }

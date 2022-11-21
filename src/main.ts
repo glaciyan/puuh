@@ -2,7 +2,6 @@ import axios from "axios";
 import { CheerioAPI, load } from "cheerio";
 import minimist from "minimist";
 import { red } from "kolorist";
-import ora from "ora";
 import { handleCharacter } from "./crawler/character";
 import { handleItem } from "./crawler/item";
 
@@ -11,6 +10,9 @@ async function main() {
 
     const option = ((argv._ as any)[0] as string) ?? null;
     const url = ((argv._ as any)[1] as string) ?? null;
+    const item2 = ((argv._ as any)[2] as string) ?? null;
+    const item3 = ((argv._ as any)[3] as string) ?? null;
+    const groupName = ((argv._ as any)[4] as string) ?? null;
 
     if (option == null) {
         console.error(red("Error: No option given"));
@@ -21,26 +23,35 @@ async function main() {
         printUsageAndExit();
     }
 
-    const spinner = ora("Preparing Site").start();
     try {
         if (option === "character" || option === "c") {
             const $ = await prepareSite(url);
-            await handleCharacter($, spinner);
+            await handleCharacter($);
         } else if (option === "item" || option === "i") {
-            const $ = await prepareSite(url);
-            await handleItem($, spinner);
+            if (item2 !== null && item3 !== null && groupName !== null) {
+                let $ = await prepareSite(url);
+                const i1 = await handleItem($, groupName);
+                $ = await prepareSite(item2);
+                const i2 = await handleItem($, groupName);
+                $ = await prepareSite(item3);
+                const i3 = await handleItem($, groupName);
+
+                console.warn(`\nGroup Entry:\n${groupName}: {
+    normalizedName: "${groupName}",
+    itemIds: [Items.${i1}, Items.${i2}, Items.${i3}],
+},`);
+            } else {
+                const $ = await prepareSite(url);
+                await handleItem($);
+            }
         } else {
-            spinner.stop();
             console.error(red("Error: Invalid option"), option);
             printUsageAndExit();
         }
     } catch (error) {
-        spinner.stop();
         console.error(red("Error: "), error);
         process.exit(1);
     }
-
-    spinner.stop();
 
     // crawlLogger.info("Successfully fetched", url);
 
@@ -59,7 +70,7 @@ export const prepareSite = async (url: string): Promise<CheerioAPI> => {
 export const printUsageAndExit = () => {
     console.error(
         red(
-            "\nUsage: puuh option url\nOptions:\n - character (c)\n - item (i)\n - itemgroup (ig)"
+            "\nUsage: puuh option url (item2 item3 groupName)\nOptions:\n - character (c)\n - item (i)"
         )
     );
     process.exit(1);

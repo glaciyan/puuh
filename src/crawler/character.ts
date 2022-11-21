@@ -1,5 +1,4 @@
 import { CheerioAPI } from "cheerio";
-import ora, { Ora } from "ora";
 import { getText } from "../getText";
 import { CharacterItemSelectors, CharacterSelectors } from "./selectors";
 import { normalizedName } from "../toId";
@@ -17,13 +16,10 @@ import { countRarityStars } from "./countRarityStars";
 
 export const handleCharacter = async (
     $: CheerioAPI,
-    spinner: Ora
 ): Promise<void> => {
-    spinner.text = "Processing Character";
 
     const character = fetchCharacter($);
 
-    spinner.stop();
 
     const formatted = getFormatted(character);
     console.log(formatted);
@@ -38,14 +34,12 @@ export const handleCharacter = async (
     // console.warn(`Card: ${gacha}`);
     // console.warn(`Mugshot: ${icon}`);
 
-    const downloadSpinner = ora("Downloading images...").start();
     https.get(gacha, (res) => {
         res.pipe(fs.createWriteStream("./card.webp"));
     });
 
     https.get(icon, (res) => {
         res.pipe(fs.createWriteStream("./mugshot.webp"));
-        downloadSpinner.stop();
     });
 };
 

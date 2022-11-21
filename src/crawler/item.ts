@@ -1,6 +1,5 @@
 import { CheerioAPI } from "cheerio";
 import { green } from "kolorist";
-import ora, { Ora } from "ora";
 import { IItem as OIItem } from "../../lib/data/contracts/IItem";
 import { getText } from "../getText";
 import { normalizedName } from "../toId";
@@ -11,14 +10,11 @@ import fs from "node:fs";
 
 type IItem = Omit<OIItem, "category">;
 
-export const handleItem = async (
-    $: CheerioAPI,
-    spinner: Ora
-): Promise<void> => {
-    spinner.text = "Processing Item";
+export const handleItem = async ($: CheerioAPI, groupId?: string) => {
     const item = fetchItem($);
+    //@ts-ignore
+    item.groupId = groupId;
 
-    spinner.stop();
     console.log(getFormatted(item));
 
     console.warn(green("Done"));
@@ -27,11 +23,11 @@ export const handleItem = async (
         "https://genshin.honeyhunterworld.com" +
         $(`img[alt='${item.name}']`).first().attr("src");
 
-    const downloadSpinner = ora("Downloading images...").start();
     https.get(image, (res) => {
         res.pipe(fs.createWriteStream(`./${item.normalizedName}.webp`));
-        downloadSpinner.stop();
     });
+
+    return item.normalizedName;
 };
 
 const getFormatted = (i: IItem) =>
