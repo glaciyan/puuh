@@ -21,3 +21,10 @@ export const CharacterItemSelectors = {
     FirstBook:
         "body > div > div.wp-block-columns > div:nth-child(2) > div.entry-content.wp-block-post-content > table.genshin_table.main_table > tbody > tr:nth-child(18) > td:nth-child(2) > a:nth-child(1) > div > img",
 };
+
+export const ItemSelectors = {
+    Name: "body > div > div.wp-block-columns > div:nth-child(2) > div.entry-content.wp-block-post-content > table.genshin_table.main_table > tbody > tr:nth-child(1) > td:nth-child(3)",
+    RarityStars:
+        "body > div > div.wp-block-columns > div:nth-child(2) > div.entry-content.wp-block-post-content > table.genshin_table.main_table > tbody > tr:nth-child(4) > td:nth-child(2) > img",
+    Image: "body > div > div.wp-block-columns > div:nth-child(2) > div.entry-content.wp-block-post-content > table.genshin_table.main_table > tbody > tr:nth-child(1) > td.rar_bg_5.hmb > img",
+};

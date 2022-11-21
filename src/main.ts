@@ -4,6 +4,7 @@ import minimist from "minimist";
 import { red } from "kolorist";
 import ora from "ora";
 import { handleCharacter } from "./crawler/character";
+import { handleItem } from "./crawler/item";
 
 async function main() {
     const argv = minimist<{}>(process.argv.slice(2), {});
@@ -25,6 +26,9 @@ async function main() {
         if (option === "character" || option === "c") {
             const $ = await prepareSite(url);
             await handleCharacter($, spinner);
+        } else if (option === "item" || option === "i") {
+            const $ = await prepareSite(url);
+            await handleItem($, spinner);
         } else {
             spinner.stop();
             console.error(red("Error: Invalid option"), option);

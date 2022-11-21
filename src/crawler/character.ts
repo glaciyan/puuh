@@ -11,8 +11,9 @@ import { ICharacter } from "../contracts/ICharacter";
 import { Items } from "../../lib/data/Items";
 import { IItem } from "../../lib/data/contracts/IItem";
 import { green } from "kolorist";
-import fs from "fs";
-import https from "https";
+import fs from "node:fs";
+import https from "node:https";
+import { countRarityStars } from "./countRarityStars";
 
 export const handleCharacter = async (
     $: CheerioAPI,
@@ -75,7 +76,7 @@ const fetchCharacter = ($: CheerioAPI): ICharacter => {
         normalizedName: normalizedName(name),
         element: parseElement(getText($, CharacterSelectors.Element)),
         weaponType: parseWeapon(getText($, CharacterSelectors.Weapon)),
-        rarity: countRarityStars($),
+        rarity: countRarityStars($, CharacterSelectors.RarityStars),
         sub: getText($, CharacterSelectors.Sub),
         constellation: getText($, CharacterSelectors.Constellation),
         description: getText($, CharacterSelectors.Description),
@@ -109,8 +110,4 @@ const fetchItem = ($: CheerioAPI, selector: string) => {
     return normalizedName($(selector).attr("alt")?.trim()!);
 };
 
-const countRarityStars = ($: CheerioAPI): 4 | 5 => {
-    const el = $(CharacterSelectors.RarityStars);
 
-    return el.length as any;
-};
