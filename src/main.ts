@@ -5,14 +5,11 @@ import { red } from "kolorist";
 import { handleCharacter } from "./crawler/character";
 import { handleItem } from "./crawler/item";
 
-async function main() {
-    const argv = minimist<{}>(process.argv.slice(2), {});
 
-    const option = ((argv._ as any)[0] as string) ?? null;
-    const url = ((argv._ as any)[1] as string) ?? null;
-    const item2 = ((argv._ as any)[2] as string) ?? null;
-    const item3 = ((argv._ as any)[3] as string) ?? null;
-    const groupName = ((argv._ as any)[4] as string) ?? null;
+const argv = minimist<{}>(process.argv.slice(2), {});
+
+async function main() {
+    const { option, url, item2, item3, groupName } = getArgs();
 
     if (option == null) {
         console.error(red("Error: No option given"));
@@ -62,12 +59,25 @@ async function main() {
     // crawlLogger.debug("Crawl text:", text);
 }
 
-export const prepareSite = async (url: string): Promise<CheerioAPI> => {
+const getArgs = () => {
+    const option = getArg(0);
+    const url = getArg(1);
+    const item2 = getArg(2);
+    const item3 = getArg(3);
+    const groupName = getArg(4);
+    return { option, url, item2, item3, groupName };
+};
+
+const getArg = (index: number) => {
+    return ((argv._ as any)[index] as string) ?? null;
+};
+
+const prepareSite = async (url: string): Promise<CheerioAPI> => {
     const { data } = await axios.get(url);
     return load(data);
 };
 
-export const printUsageAndExit = () => {
+const printUsageAndExit = () => {
     console.error(
         red(
             "\nUsage: puuh option url (item2 item3 groupName)\nOptions:\n - character (c)\n - item (i)"

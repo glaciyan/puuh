@@ -7,12 +7,14 @@ require("esbuild")
         bundle: true,
         platform: "node",
         target: ["node18"],
-        watch: watch ? {
-            onRebuild: (error, result) => {
-                if (error) console.log("watch build errror");
-                else console.log("refreshed");
-            },
-        } : null,
+        watch: watch
+            ? {
+                  onRebuild: (error, result) => {
+                      if (error) console.log("watch build errror");
+                      else console.log("refreshed");
+                  },
+              }
+            : null,
         minify: minify,
         outfile: "puuh.js",
     })
