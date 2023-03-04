@@ -96,7 +96,7 @@ const fetchCharacterItemGroups = ($: CheerioAPI): CharacterItemGroups => {
 };
 
 const fetchItemGroup = ($: CheerioAPI, selector: string) => {
-    const firstName = normalizedName($(selector).attr("alt")?.trim()!);
+    const firstName = normalizedName($(selector).attr("alt")?.trim());
     //@ts-ignore
     return ((Items[firstName] as IItem).groupId as string) ?? "unknown";
 };
@@ -110,7 +110,7 @@ const fetchCharacterItems = ($: CheerioAPI): CharacterItems => {
 };
 
 const fetchItem = ($: CheerioAPI, selector: string) => {
-    return normalizedName($(selector).attr("alt")?.trim()!);
+    return normalizedName($(selector).attr("alt")?.trim());
 };
 
 
