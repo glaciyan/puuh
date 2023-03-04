@@ -25,6 +25,8 @@ export const handleCharacter = async (
     console.log(formatted);
     console.warn(green("Done"));
 
+    console.warn(green("Downloading images..."));
+
     const gacha =
         "https://genshin.honeyhunterworld.com" +
         $("#char_gallery a:contains('Gacha Splash')").attr("href");
@@ -34,13 +36,18 @@ export const handleCharacter = async (
     // console.warn(`Card: ${gacha}`);
     // console.warn(`Mugshot: ${icon}`);
 
+    console.warn(green("Downloading card.webp..."))
     https.get(gacha, (res) => {
         res.pipe(fs.createWriteStream("./card.webp"));
     });
 
+
+    console.warn(green("Downloading mugshot.webp..."))
     https.get(icon, (res) => {
         res.pipe(fs.createWriteStream("./mugshot.webp"));
     });
+
+    console.warn(green("Downloaded images. Done."))
 };
 
 const getFormatted = (c: ICharacter) => {
@@ -64,6 +71,8 @@ const getFormatted = (c: ICharacter) => {
 
 const fetchCharacter = ($: CheerioAPI): ICharacter => {
     const name = getText($, CharacterSelectors.Name);
+
+    console.warn(green(`Parsing ${name}...`))
 
     return {
         name: name,

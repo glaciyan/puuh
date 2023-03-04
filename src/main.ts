@@ -1,7 +1,7 @@
 import axios from "axios";
 import { CheerioAPI, load } from "cheerio";
 import minimist from "minimist";
-import { red } from "kolorist";
+import {green, red} from "kolorist";
 import { handleCharacter } from "./crawler/character";
 import { handleItem } from "./crawler/item";
 
@@ -73,7 +73,9 @@ const getArg = (index: number) => {
 };
 
 const prepareSite = async (url: string): Promise<CheerioAPI> => {
+    console.warn(green(`Loading ${url}`));
     const { data } = await axios.get(url);
+    console.warn(green("Loaded. Parsing html..."));
     return load(data);
 };
 
