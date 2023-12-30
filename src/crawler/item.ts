@@ -1,8 +1,8 @@
 import { CheerioAPI } from "cheerio";
-import { green } from "kolorist";
+import { green, lightBlue } from "kolorist";
 import { IItem as OIItem } from "../../lib/data/contracts/IItem";
 import { getText } from "../getText";
-import { normalizedName } from "../toId";
+import { cleanSpecialCharacter, normalizedName } from "../toId";
 import { countRarityStars } from "./countRarityStars";
 import { ItemSelectors } from "./selectors";
 import https from "node:https";
@@ -14,14 +14,19 @@ export const handleItem = async ($: CheerioAPI, groupId?: string) => {
     const item = fetchItem($);
     //@ts-ignore
     item.groupId = groupId;
+    console.warn(lightBlue(`Item has group '${groupId}'`))
 
     console.log(getFormatted(item));
 
     console.warn(green("Done"));
 
-    const image =
-        "https://genshin.honeyhunterworld.com" +
-        $(`img[alt='${item.name}']`).first().attr("src");
+    const imageTarget = $(`img.main_image`)
+        .first()
+        .attr("src");
+
+    if (!imageTarget) throw Error("Could not find src of image");
+
+    const image = "https://genshin.honeyhunterworld.com" + imageTarget;
 
     https.get(image, (res) => {
         res.pipe(fs.createWriteStream(`./${item.normalizedName}.webp`));
@@ -33,17 +38,19 @@ export const handleItem = async ($: CheerioAPI, groupId?: string) => {
 const getFormatted = (i: IItem) =>
     `${i.normalizedName}: {
     name: "${i.name}",
-    normalizedName: "${i.normalizedName}",
+    normalizedName: "${i.normalizedName}",${i.groupId ? `\ngroupId: "${i.groupId}",` : ""}
     rarity: ${i.rarity},
     category: "__insert__",
 },`;
 
-const fetchItem = ($: CheerioAPI): IItem => {
+const fetchItem = ($: CheerioAPI): IItem & { originalName: string } => {
     const name = getText($, ItemSelectors.Name);
+    const cleanName = cleanSpecialCharacter(name);
 
     return {
-        name: name,
-        normalizedName: normalizedName(name),
+        name: cleanName,
+        originalName: name,
+        normalizedName: normalizedName(cleanName),
         rarity: countRarityStars($, ItemSelectors.RarityStars),
     };
 };

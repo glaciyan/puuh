@@ -9,7 +9,7 @@ import { CharacterItems } from "../contracts/CharacterItems";
 import { ICharacter } from "../contracts/ICharacter";
 import { Items } from "../../lib/data/Items";
 import { IItem } from "../../lib/data/contracts/IItem";
-import { green } from "kolorist";
+import { green, lightBlue, lightYellow } from "kolorist";
 import fs from "node:fs";
 import https from "node:https";
 import { countRarityStars } from "./countRarityStars";
@@ -36,15 +36,15 @@ export const handleCharacter = async (
     // console.warn(`Card: ${gacha}`);
     // console.warn(`Mugshot: ${icon}`);
 
-    console.warn(green("Downloading card.webp..."))
+    console.warn(green("Downloading card..."))
     https.get(gacha, (res) => {
         res.pipe(fs.createWriteStream("./card.webp"));
     });
 
 
-    console.warn(green("Downloading mugshot.webp..."))
+    console.warn(green("Downloading mugshot..."))
     https.get(icon, (res) => {
-        res.pipe(fs.createWriteStream("./mugshot.webp"));
+        res.pipe(fs.createWriteStream(`./${character.normalizedName}.webp`));
     });
 
     console.warn(green("Downloaded images. Done."))
@@ -96,9 +96,16 @@ const fetchCharacterItemGroups = ($: CheerioAPI): CharacterItemGroups => {
 };
 
 const fetchItemGroup = ($: CheerioAPI, selector: string) => {
-    const firstName = normalizedName($(selector).attr("alt")?.trim());
+    const selection = $(selector).attr("alt")
+    if (!selection) throw new Error(`Failed to fetch ItemGroup (selector '${selector}')`)
+
+    const firstName = normalizedName(selection.trim());
+    console.warn(lightBlue(`Found Item for Group ${firstName}`))
+
     //@ts-ignore
-    return ((Items[firstName] as IItem).groupId as string) ?? "unknown";
+    const group = (Items[firstName] as IItem)?.groupId as string
+    if (!group) console.warn(lightYellow(`No Group found in gscale repository for '${firstName}'. Consider adding the group first.`))
+    return group ?? "unknown";
 };
 
 const fetchCharacterItems = ($: CheerioAPI): CharacterItems => {
@@ -110,7 +117,9 @@ const fetchCharacterItems = ($: CheerioAPI): CharacterItems => {
 };
 
 const fetchItem = ($: CheerioAPI, selector: string) => {
-    return normalizedName($(selector).attr("alt")?.trim());
+    const name = normalizedName($(selector).attr("alt")?.trim()) 
+    console.warn(lightBlue(`Found Item ${name}`))
+    return name;
 };
 
 

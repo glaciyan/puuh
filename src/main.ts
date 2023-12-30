@@ -37,6 +37,10 @@ async function main() {
     normalizedName: "${groupName}",
     itemIds: [Items.${i1}, Items.${i2}, Items.${i3}],
 },`);
+                console.warn(`\nItem Keys:\n
+    | "${i1}"
+    | "${i2}"
+    | "${i3}"`)
             } else {
                 const $ = await prepareSite(url);
                 await handleItem($);
